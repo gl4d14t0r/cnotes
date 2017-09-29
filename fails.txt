@@ -1,0 +1,35 @@
+list_node_t *list_sort(list_node_t **head)
+{
+	if (*head == NULL) {
+		fprintf(stderr, "Error: cannot sort an empty list.\n");
+		exit(1);
+	}
+
+	list_node_t *new_head = NULL;
+	list_node_t *iterator = *head;
+	list_node_t *new_iterator = new_head;
+	unsigned position_number = 0;
+
+	while (iterator->next != NULL) {
+		if (new_head == NULL)
+			list_insert(&new_head, position_number, iterator->note);
+		else {
+			while (new_iterator->next != NULL) {
+				if (iterator->note->id <= new_iterator->note->id)
+					list_insert(&new_head, position_number, iterator->note);
+				else {
+					new_iterator = new_iterator->next;
+					position_number++;
+					if (new_iterator->next == NULL)
+						list_insert(&new_head, position_number, iterator->note);
+				}
+			}
+		}
+		iterator = iterator->next;
+		new_iterator = new_head;
+		position_number = 0;
+	}
+
+	list_destroy(*head);
+	return new_head;
+}
